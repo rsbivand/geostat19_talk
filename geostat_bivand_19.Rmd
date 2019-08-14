@@ -341,8 +341,6 @@ language [@kernighan+pike84]
 of component programs that are used together to achieve a common
 goal
 
-### Component stacks
-
 - Using stacks of components becomes attractive when task objectives
 can more easily be met by using components developed by others than by
 developing them independently
@@ -375,8 +373,6 @@ need to be modified
 - If the changes are forced by real bugs being fixed,
 or security holes being blocked, downstream components must react in
 appropriate ways
-
-### Dependency challenges
 
 - However, some changes occur for other reasons, such
 as code cleaning, reimplementation, or the resolution of licence issues
@@ -413,8 +409,6 @@ mapping, and in his description, the open source web mapping
 
 - The Geospatial Data Abstraction Library is a crucial part
 of the upstream geospatial library infrastructure
-
-### Open source geospatial projects
 
 - One of the most important components required by geospatial applications
 is the provision of robust and clear representations of coordinate
