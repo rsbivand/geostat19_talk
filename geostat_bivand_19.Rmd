@@ -415,40 +415,17 @@ have been playing an important role in the broader OSGeo movement
 [@neteleretal08]; many of the more recent developments in 
 GRASS are covered by Neteler et al. [-@neteleretal12]
 
-## Spatial reference systems
+## Ongoing changes in external sofware (GEOS, GDAL, PROJ)
 
 
-Spatial data typically combine position data in 2D (or 3D), attribute data and metadata related to the position data. Much spatial data could be called map data or GIS data. We collect and handle much more position data since global navigation satellite system (GNSS) like GPS came on stream 20 years ago, earth observation satellites have been providing data for longer. 
-
-
-```{r, echo = TRUE, cache=TRUE}
-library(osmdata)
-library(sf)
-bbox <- opq(bbox = 'bergen norway')
-byb0 <- osmdata_sf(add_osm_feature(bbox, key = 'railway',
-  value = 'light_rail'))$osm_lines
-tram <- osmdata_sf(add_osm_feature(bbox, key = 'railway',
-  value = 'tram'))$osm_lines
-byb1 <- tram[!is.na(tram$name),]
-o <- intersect(names(byb0), names(byb1))
-byb <- rbind(byb0[,o], byb1[,o])
+```{r echo=FALSE}
+knitr::include_graphics('pix/sf_deps.png')
 ```
 
 
+### PROJ
 
-
-### Baseline WKT and PROJ4
-
-
-Spatial reference systems define how the geoid is viewed (prime meridian, ellipsoid, datum), and, if projected to the plane, where we are (central longitude, latitude, offsets, etc.). Projection (no datum change) and transformation are possible using PROJ and its legacy `proj_api.h` interface directly (`rgdal::spTransform()` and `lwgeom::st_transform_proj()`), or through GDAL (`sf::st_transform()`).
-
-
-```{r, echo = TRUE, cache=TRUE}
-(WKT <- st_crs(byb))
-strwrap(gsub(",", ", ", st_as_text(WKT)))
-byb_utm <- st_transform(byb, crs=32632)
-st_crs(byb_utm)
-```
+Because so much open source (and other) software uses the PROJ library and framework, many are affected when PROJ upgrades. Until very recently, PROJ has been seen as very reliable, and the changes taking place now are intended to confirm and reinforce this reliability. Before PROJ 5 (PROJ 6 is out now, PROJ 7 is coming early in 2020), the `+datum=` tag was used, perhaps with `+towgs84=` with three or seven coefficients, and possibly `+nadgrids=` where datum transformation grids were available. However, transformations from one projection to another first inversed to longitude-latitude in WGS84, then projected on to the target projection.
 
 
 ### Big bump coming:
@@ -456,21 +433,320 @@ st_crs(byb_utm)
 'Fast-forward 35 years and PROJ.4 is everywhere: It provides coordinate handling for almost every geospatial program, open or closed source. Today,  we  see  a  drastical  increase  in  the  need  for  high  accuracy  GNSS  coordinate  handling, especially in the agricultural and construction engineering sectors.  This need for geodetic-accuracy transformations  is  not  satisfied  by  "classic  PROJ.4".  But  with  the  ubiquity  of  PROJ.4,  we  can provide these transformations "everywhere", just by implementing them as part of PROJ.4' [@evers+knudsen17].
 
 
-### Escaping the WGS84 hub: PROJ and OGC WKT2
+### Escaping the WGS84 hub/pivot: PROJ and OGC WKT2
 
 
-Following the introduction of geodetic modules and pipelines in PROJ 5 [@knudsen+evers17; @evers+knudsen17], PROJ 6 moves further. Changes in the legacy PROJ representation and WGS84 transformation hub have been coordinated through the [GDAL barn raising}](https://gdalbarn.com/) initiative. Crucially WGS84 often ceases to be the pivot for moving between datums. A new OGC WKT is coming, and an SQLite EPSG file database has replaced CSV files. SRS will begin to support 3D by default, adding time too as SRS change. See also [PROJ migration notes}](https://proj.org/development/migration.html)
+Following the introduction of geodetic modules and pipelines in PROJ 5 [@knudsen+evers17; @evers+knudsen17], PROJ 6 moves further. Changes in the legacy PROJ representation and WGS84 transformation hub have been coordinated through the [GDAL barn raising](https://gdalbarn.com/) initiative. Crucially WGS84 often ceases to be the pivot for moving between datums. A new OGC WKT is coming, and an SQLite EPSG file database has replaced CSV files. SRS will begin to support 3D by default, adding time too as SRS change. See also [PROJ migration notes](https://proj.org/development/migration.html).
+
+There are very useful postings on the PROJ mailing list from Martin Desruisseaux, first [proposing clarifications](https://lists.osgeo.org/pipermail/proj/2019-July/008748.html) and a [follow-up](https://lists.osgeo.org/pipermail/proj/2019-August/008750.html) including a summary:
+
+> * "Early binding" ≈ hub transformation technique.
+
+> * "Late binding" ≈ hub transformation technique NOT used, replaced by
+a more complex technique consisting in searching parameters in the
+EPSG database after the transformation context (source, target,
+epoch, area of interest) is known.
+
+> * The problem of hub transformation technique is independent of WGS84.
+It is caused by the fact that transformations to/from the hub are
+approximate. Any other hub we could invent in replacement of WGS84
+will have the same problem, unless we can invent a hub for which
+transformations are exact (I think that if such hub existed, we
+would have already heard about it).
+
+> The solution proposed by ISO 19111 (in my understanding) is:
+
+> * Forget about hub (WGS84 or other), unless the simplicity of
+early-binding is considered more important than accuracy.
+
+> * Associating a CRS to a coordinate set (geometry or raster) is no
+longer sufficient. A {CRS, epoch} tuple must be associated. ISO
+19111 calls this tuple "Coordinate metadata". From a programmatic
+API point of view, this means that getCoordinateReferenceSystem()
+method in Geometry objects (for instance) needs to be replaced by a
+getCoordinateMetadata() method.
 
 
-```{r, echo = TRUE, cache=TRUE}
-head(st_coordinates(st_geometry(byb)[[1]]), n=1)
-system(paste("echo 5.333375 60.30436 |", 
-  "proj +proj=pipeline +ellps=WGS84", 
-  "+step +init=epsg:32632"), intern=TRUE)
-head(st_coordinates(st_geometry(byb_utm)[[1]]), n=1)
+In QGIS built on current PROJ 6 with the `proj.h` API (and GDAL built on current PROJ 6 with the `proj.h` API), we see the following sequence of GUI windows when trying to open the olinda.gpkg file.
+
+
+```{r echo=FALSE}
+knitr::include_graphics('pix/A_Screenshot.png')
+```
+
+Instead of using the declared coordinate reference system of the added layer to provide a transformation/conversion relationship to possible WGS84 geographical coordinate or web mapping backgrounds, the user of the most recent QGIS version with PROJ 6 faces a choice of three alternatives with varying availabilities and precisions:
+
+```{r echo=FALSE}
+knitr::include_graphics('pix/B_Screenshot.png')
+```
+
+```{r echo=FALSE}
+knitr::include_graphics('pix/C_Screenshot.png')
+```
+
+The third alternative has better precision, but depends on finding and installing an NTv2 grid file in the PROJ `shared/proj` metadata folder:
+
+```{r echo=FALSE}
+knitr::include_graphics('pix/D_Screenshot.png')
+```
+
+If we install the file, the choices change to promote the more precise NTv2-based path to the first position:
+
+```{r echo=FALSE}
+knitr::include_graphics('pix/E_Screenshot.png')
+```
+
+```{r, echo=TRUE}
+library(sf)
+packageVersion("sf")
+```
+
+The final element reported by `sf::sf_extSoftVersion()` shows whether **sf** was built with the `proj.h` interface to PROJ, or the legacy `proj.api.h` interface. However, GDAL also has to be built with the `proj.h` interface for everything to line up:
+
+```{r, echo=TRUE}
+sf_extSoftVersion()
 ```
 
 
+
+```{r, echo=TRUE}
+st_crs(22525)
+```
+
+The OGC WTK2 definition now contains a usage/scope term showing where the definition may be used; there may also be a temporal frame for a definition.
+
+```{r, echo=TRUE}
+cat(system("projinfo EPSG:22525", intern=TRUE), sep="\n")
+```
+
+If we ask about possible transformations/conversions, we see choices we saw among those represented in QGIS (I work on two apparently identical systems, which may give different choice counts)
+
+```{r, echo=TRUE}
+cat(system("projinfo -s EPSG:22525 -t EPSG:31985", intern=TRUE), sep="\n")
+```
+
+The input data use the Corrego Alegre 1970-1972 setting, and still provide a `+towgs84=` key representation for pivoting through WGS84:
+
+```{r, echo=TRUE}
+olinda <- st_read("data/olinda.gpkg", quiet=TRUE)
+st_crs(olinda)
+```
+
+We'll just use one point to check things out:
+
+```{r, echo=TRUE}
+xy_c <- st_centroid(st_geometry(olinda[  1,]))
+st_coordinates(xy_c)
+```
+
+If we manually pivot through WGS84 on the way back to SIRGAS2000 UTM, we get:
+
+```{r, echo=TRUE}
+st_coordinates(st_transform(st_transform(xy_c, 4326), 31985))
+```
+
+Without the NTv2 grid file `CA7072_003.gsb` we seem to get the same:
+
+```{r, echo=TRUE}
+# without CA7072_003.gsb
+st_coordinates(st_transform(xy_c, 31985))
+```
+
+but we also get the same with the grid file if we leave the `+towgs84=` key in the PROJ string:
+
+```{r, echo=TRUE, eval=FALSE}
+# with CA7072_003.gsb
+st_coordinates(st_transform(xy_c, 31985))
+#          X       Y
+# 1 295489.3 9120352
+```
+
+If however we manipulate the PROJ string to specify the grid file instead of the `+towgs84=` key, we can get the improved precision:
+
+```{r, echo=TRUE, eval=FALSE}
+# with CA7072_003.gsb
+xy_c1 <- xy_c
+st_crs(xy_c1) <- "+proj=utm +zone=25 +south +ellps=intl +units=m +nadgrids=CA7072_003.gsb"
+print(st_coordinates(st_transform(xy_c1, 31985)), digits=9)
+#            X          Y
+# 1 295486.396 9120350.62
+```
+
+Let's try to use the PROJ utility program `cs2cs` in its PROJ 6 version. The `cs2cs` version when the grid file is present matches `sf::st_transform()` when the input CRS is modified to point to the grid file:
+
+```{r, echo=TRUE, eval=FALSE}
+# with CA7072_003.gsb
+cat(system(paste0("echo ", paste(xy, collapse=" "), " | cs2cs EPSG:22525 EPSG:31985"), intern=TRUE))
+# 295486.40 9120350.62 0.00
+```
+
+`cs2cs` without the grid file gives:
+
+```{r, echo=TRUE}
+xy <- st_coordinates(xy_c)
+# without CA7072_003.gsb
+cat(system(paste0("echo ", paste(xy, collapse=" "), " | cs2cs EPSG:22525 EPSG:31985"), intern=TRUE))
+```
+
+This matches the second set of `+towgs84=` coefficients:
+
+```{r, echo=TRUE, warning=FALSE}
+# without CA7072_003.gsb
+xy_c2 <- xy_c
+st_crs(xy_c2) <- "+proj=utm +zone=25 +south +ellps=intl +units=m +towgs84=-206.05,168.28,-3.82,0,0,0,0"
+st_coordinates(st_transform(xy_c2, 31985))
+```
+
+Using the `lwgeom::st_transform_proj()` for now uses the `proh_api.h` interface:
+
+```{r, echo=TRUE}
+# without CA7072_003.gsb
+# -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+st_coordinates(lwgeom::st_transform_proj(xy_c, 31985))
+```
+
+
+This is the EPSG description of the grid file: https://epsg.io/5541
+
+It was retrieved from: https://www.eye4software.com/files/ntv2/ca70.zip
+
+This [page](https://ww2.ibge.gov.br/home/geociencias/geodesia/default_sirgas_int.shtm?c=11) gives a picture of why the changes in PROJ matter - the arrows are in cm per year displacement.
+
+Some grid files are available from https://proj.org/download.html, but because many others are not as freely available (yet), they may need to be dwnloaded from national mapping agencies. Most are relatively large, and also need to be versioned. Do read the README files in the zip archives!
+
+
+### GEOS
+
+A recent upgrade of GEOS from 3.7.1 to 3.7.2 on a CRAN test server led to failures in three packages using **rgeos** for topological operations. **rgeos** 0.4-3 set the `checkValidity=`  argument to for example `gIntersection()` to FALSE (TRUE threw an error if either geometry was invalid). An [issue](https://github.com/r-spatial/sf/issues/1121) was opened on the **sf** github repository (**rgeos** is developed on R-Forge). The test objects (from an example from **inlmisc**) will be used here:
+
+```{r, echo=TRUE}
+rgeos::version_GEOS0()
+```
+
+For **rgeos** <= 0.4-3, the default was not to check input geometries for validity before trying topological operations, for >= 0.5-1, the default changes when GEOS > 3.7.1 to check for validity. The mode of the argument also changes to integer from logical:
+
+```{r, echo=TRUE, warning=FALSE}
+cV_old_default <- ifelse(rgeos::version_GEOS0() >= "3.7.2", 0L, FALSE)
+yy <- rgeos::readWKT(readLines("data/invalid.wkt"))
+rgeos::gIsValid(yy, byid=TRUE, reason=TRUE)
+```
+
+```{r, echo=TRUE}
+sf::sf_extSoftVersion()
+```
+
+The same underlyng GEOS code is used in **sf**:
+
+```{r, echo=TRUE}
+sf::st_is_valid(sf::st_as_sf(yy), reason=TRUE)
+```
+The geometries were also invalid in GEOS 3.7.1, but the operations succeeded:
+
+```{r, echo=TRUE, warning=FALSE}
+ply <- rgeos::readWKT(readLines("data/ply.wkt"))
+oo <- try(rgeos::gIntersection(yy, ply, byid=TRUE, checkValidity=cV_old_default), silent=TRUE)
+print(attr(oo, "condition")$message)
+```
+```{r, echo=TRUE}
+ooo <- try(sf::st_intersection(sf::st_as_sf(yy), sf::st_as_sf(ply)), silent=TRUE)
+print(attr(oo, "condition")$message)
+```
+In **rgeos** 0.5-1 and GEOS 3.7.2, new warnings are provided, and advice to check validity.
+
+```{r, echo=TRUE}
+cV_new_default <- ifelse(rgeos::version_GEOS0() >= "3.7.2", 1L, TRUE)
+try(rgeos::gIntersection(yy, ply, byid=TRUE, checkValidity=cV_new_default), silent=TRUE)
+```
+
+New options are provided, `get_RGEOS_CheckValidity()` and `set_RGEOS_CheckValidity()`, because in some packages the use of topological operations may happen through other packages, such as `raster::crop()` calling `rgeos::gIntersection()` without access to the arguments of the latter function.
+
+If we follow the advice, zero-width buffering is used to try to rectify the invalidity:
+
+```{r, echo=TRUE}
+oo <- rgeos::gIntersection(yy, ply, byid=TRUE, checkValidity=2L)
+rgeos::gIsValid(oo)
+```
+
+equivalently:
+
+```{r, echo=TRUE}
+oo <- rgeos::gIntersection(rgeos::gBuffer(yy, byid=TRUE, width=0), ply, byid=TRUE, checkValidity=1L)
+rgeos::gIsValid(oo)
+```
+
+and by extension to **sf** until GEOS 3.7.2 is accommodated:
+
+```{r, echo=TRUE}
+ooo <- sf::st_intersection(sf::st_buffer(sf::st_as_sf(yy), dist=0), sf::st_as_sf(ply))
+all(sf::st_is_valid(ooo))
+```
+
+The actual cause was the use of an ESRI/shapefile style/understanding of the self-touching exterior ring. In OGC style, an interior ring is required, but not in shapefile style. Martin Davis responded in the issue:
+
+> The problem turned out to be a noding robustness issue, which caused the valid input linework to have a self-touch after noding. This caused the output to be invalid. The fix was to tighten up the internal overlay noding validation check to catch this situation. This has the side-effect of detecting (and failing) all self-touches in input geometry. Previously, vertex-vertex self-touches were not detected, and in many cases they would simply propagate through the overlay algorithm. (This made the output invalid as well, but since the inputs were already invalid this behaviour was considered acceptable).
+
+The change in GEOS behaviour was not planned as such, but has consequences, fortunately detected because CRAN checks by default much more than say Travis by default. Zero-width buffering will not repair all cases of invalidity, but does work here.
+
+### PROJ 6 impacts ASDAR
+
+In the Soho cholera data set; I also converted the shapefiles from https://asdar-book.org/bundles2ed/die_bundle.zip to GPKG to be more modern (using `ogr2ogr` in GDAL 3 built against PROJ 6). **sf** is installed using the `proj.h` interface in PROJ 6:
+
+```{r, echo=TRUE}
+buildings <- sf::st_read("data/buildings.gpkg", quiet=TRUE)
+st_crs(buildings)
+```
+
+To make an interactive display in `mapview()`, conversion/transformation to "Web Mercator" is needed - this uses a WGS84 datum. But PROJ 6 has dropped the `+datum=` tag, so the display is not correctly registered.
+
+```{r, echo=TRUE}
+library(mapview)
+mapview(buildings)
+```
+
+The CRS/SRS values in the GPKG file (it is a multi-table SQLite database) include the datum definition:
+
+```{r, echo=TRUE}
+library(RSQLite)
+db = dbConnect(SQLite(), dbname="data/buildings.gpkg")
+dbReadTable(db, "gpkg_spatial_ref_sys")$definition[4]
+dbDisconnect(db)
+```
+
+Maybe using **rgdal** which is built using PROJ 6 but the legacy `proj_api.h` interface, and the shapefile as shipped with ASDAR reproduction materials will help?
+
+```{r, echo=TRUE}
+buildings1 <- rgdal::readOGR("data/buildings.shp", verbose=FALSE)
+sp::proj4string(buildings1)
+```
+
+No, same problem:
+
+```{r, echo=TRUE}
+mapview(buildings1)
+```
+
+But the shapefile has the datum definition:
+
+```{r, echo=TRUE, warning=FALSE}
+readLines("data/buildings.prj")
+```
+
+So in both cases with PROJ 6, we need to manipulate the CRS read in with the file to insert our choice of how to make the transformation, because the definition as read no longer contains it:
+
+```{r, echo=TRUE, warning=FALSE}
+fixed <- "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +nadgrids=OSTN15_NTv2_OSGBtoETRS.gsb +units=m +no_defs"
+st_crs(buildings) <- fixed
+sp::proj4string(buildings1) <- sp::CRS(fixed)
+```
+
+
+```{r, echo=TRUE}
+mapview(buildings)
+```
+
+```{r, echo=TRUE}
+mapview(buildings1)
+```
 
 ## CRAN packages
 
