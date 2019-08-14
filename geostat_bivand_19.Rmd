@@ -22,9 +22,23 @@ knitr::opts_chunk$set(echo = FALSE)
 ### Copyright
 
 All the material presented here, to the extent it is original, is available under [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/). 
+
 ### Source and links
 
-The  presentation files are on github at: (https://rsbivand.github.io/geostat19_talk)
+The  presentation file is on github at: (https://rsbivand.github.io/geostat19_talk)
+
+### Required current contributed CRAN packages:
+
+I am running R 3.6.1, with recent `update.packages()`.
+
+```{r, echo=TRUE}
+needed <- c("sf", "mapview", "sp", "rgdal", "wordcloud", "RColorBrewer", "rgeos", "magrittr", "igraph", "miniCRAN", "ctv", "RSQLite", "lwgeom")
+```
+
+
+### Script
+
+Script at https://github.com/rsbivand/geostat19_talk/raw/master/geostat_bivand_19.zip. Download to suitable location and use as basis.
 
 ### Introduction
 
