@@ -474,6 +474,8 @@ API point of view, this means that getCoordinateReferenceSystem()
 method in Geometry objects (for instance) needs to be replaced by a
 getCoordinateMetadata() method.
 
+Maybe watch Even Roualt's recent FOSS4G talk: https://media.ccc.de/v/bucharest-198-revamp-of-coordinate-reference-system-management-in-the-osgeo-c-c-stack-with-proj-and-gdal
+
 
 In QGIS built on current PROJ 6 with the `proj.h` API (and GDAL built on current PROJ 6 with the `proj.h` API), we see the following sequence of GUI windows when trying to open the olinda.gpkg file.
 
