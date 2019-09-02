@@ -20,7 +20,7 @@ In discussion during and around the session, it was suggested that [issues in R-
 
 This document is a place to draft the issue texts to bring in overviews of the two (more?) topics. Please provide PRs to this document until we feel that we are ready to publish the R-spatial/discuss issues.
 
-When we publish the issues, how should we try to bring in users whose workflows will be impacted by changes related to upstream software and made in R packages with many reverse dependencies? Please comment: R-sig-geo, twitter
+When we publish the issues, how should we try to bring in users whose workflows will be impacted by changes related to upstream software and made in R packages with many reverse dependencies? Please comment: R-sig-geo, twitter, other channels?
 
 
 ## PROJ issue draft text
