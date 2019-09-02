@@ -7,5 +7,7 @@ output:
 theme: united
 ---
 
+## [Outcomes of OpenGeoHub summer school session](https://rsbivand.github.io/geostat19_talk/Discuss_issue_drafts.html)
+
 ### [workshop document](https://rsbivand.github.io/geostat19_talk/geostat_bivand_19.html)
 

@@ -1,0 +1,54 @@
+---
+title: "Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues"
+author: "Roger Bivand"
+date: "2 September 2019"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+theme: united
+bibliography: bus463.bib
+link-citations: yes
+---
+
+## Outcomes of OpenGeoHub summer school session 
+
+In discussion during and around the session, it was suggested that [issues in R-spatial/discuss](https://github.com/r-spatial/discuss) be used as a forum for collating points with regard to the upstream change problems raised. The two topics are transition to late-binding transformation pipelines in PROJ and changes un GDAL drivers and GEOS with regard to tightening of vector geometry validity requirements.
+
+This document is a place to draft the issue texts to bring in overviews of the two (more?) topics. Please provide PRs to this document until we feel that we are ready to publish the R-spatial/discuss issues.
+
+When we publish the issues, how should we try to bring in users whose workflows will be impacted by changes related to upstream software and made in R packages with many reverse dependencies? Please comment: R-sig-geo, twitter
+
+
+## PROJ issue draft text
+
+[Ongoing changes](https://proj.org/development/migration.html) in the representation of coordinate reference systems in the [PROJ](https://proj.org), external software used by **sf**, **sp** and other R packages, will impact R packages and workflows using these packages. In particular, the changes affect transformation between coordinate reference systems, as for example shown in [this presentation](https://rsbivand.github.io/geostat19_talk/geostat_bivand_19.html) at the OpenGeoHub Summer School 2019.
+
+- Invite users/developers to contribute cases
+
+- Add other examples and links, also from other geospatial software.
+
+- Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes
+
+
+## Geometry invalidity issue draft text
+
+Ongoing changes in vector geometry validity handling in GEOS and GDAL drivers used in R packages **sf**, **rgdal** and **rgeos** have led to unexpected changes or failures in R workflows and packages using these packages. Operations which previously appeared to succeed now fail, either noisily (good) or silently (bad).
+
+- Invite users/developers to contribute cases
+
+- Add other examples and links.
+
+Shapefile affected: [ESRI Shapefile driver not roundtripping in edge case](https://github.com/r-spatial/sf/issues/1130)
+
+Intersection affected: [GEOS 3.7.1 to 3.7.2 tightening of validity needed for operations](https://github.com/r-spatial/sf/issues/1121)
+
+Plotting in **tmap** affected: [tm_graticules() does not work for some cases](https://github.com/mtennekes/tmap/issues/333)
+
+- Provide recommendations for checking/testing driver/GEOS versions in use and expected geometry handling outcomes
+
+
+
