@@ -31,6 +31,10 @@ When we publish the issues, how should we try to bring in users whose workflows 
 
 - Add other examples and links, also from other geospatial software.
 
+Notes from [Spatialite](https://www.gaia-gis.it/fossil/libspatialite/wiki?name=PROJ.6)
+
+PROJ wiki [proj.h adoption status](https://github.com/OSGeo/PROJ/wiki/proj.h-adoption-status)
+
 - Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes
 
 
