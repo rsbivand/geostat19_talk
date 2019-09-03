@@ -1,7 +1,7 @@
 ---
 title: "Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues"
 author: "Roger Bivand"
-date: "2 September 2019"
+date: "`r Sys.Date()`"
 output: 
   html_document:
     toc: true
@@ -35,6 +35,22 @@ Notes from [Spatialite](https://www.gaia-gis.it/fossil/libspatialite/wiki?name=P
 
 PROJ wiki [proj.h adoption status](https://github.com/OSGeo/PROJ/wiki/proj.h-adoption-status)
 
+**cartography** [CRS issues](https://github.com/riatelab/cartography/issues/54)
+
+**geojsonio** [geojsonio seems vulnerable to PROJ 6](https://github.com/ropensci/geojsonio/issues/148)
+
+**MODIS** [getTile() sp subset or raster::crop issues with PROJ 6.1 and GDAL 3.0](https://github.com/MatMatt/MODIS/issues/71)
+
+**MODIStsp** [PROJ 6 failures in MODIStsp](https://github.com/ropensci/MODIStsp/issues/167)
+
+**rangeMapper** [PROJ 6 failures in rangeMapper](https://github.com/mpio-be/rangeMapper/issues/5)
+
+**rdefra** [PROJ 6 failures in rdefra](https://github.com/ropensci/rdefra/issues/9)
+
+**rnrfa** [PROJ 6 failures in rnfra](https://github.com/cvitolo/rnrfa/issues/15)
+
+**rshapemapper** [PROJ 6 problems?](https://github.com/ateucher/rmapshaper/issues/88)
+
 - Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes
 
 
@@ -51,6 +67,12 @@ Shapefile affected: [ESRI Shapefile driver not roundtripping in edge case](https
 Intersection affected: [GEOS 3.7.1 to 3.7.2 tightening of validity needed for operations](https://github.com/r-spatial/sf/issues/1121)
 
 Plotting in **tmap** affected: [tm_graticules() does not work for some cases](https://github.com/mtennekes/tmap/issues/333)
+
+**lidR** [problem with class inheritance](https://github.com/Jean-Romain/lidR/issues/268)
+
+**MODIS** [getTile() sp subset or raster::crop issues with PROJ 6.1 and GDAL 3.0](https://github.com/MatMatt/MODIS/issues/71)
+
+**inlmisc** [Possible GEOS version vulnerability (3.7.2)](https://github.com/USGS-R/inlmisc/issues/106)
 
 - Provide recommendations for checking/testing driver/GEOS versions in use and expected geometry handling outcomes
 

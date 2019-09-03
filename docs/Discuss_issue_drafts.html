@@ -12,7 +12,7 @@
 
 <meta name="author" content="Roger Bivand" />
 
-<meta name="date" content="2019-09-02" />
+<meta name="date" content="2019-09-03" />
 
 <title>Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues</title>
 
@@ -1512,7 +1512,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues</h1>
 <h4 class="author">Roger Bivand</h4>
-<h4 class="date">2 September 2019</h4>
+<h4 class="date">2019-09-03</h4>
 
 </div>
 
@@ -1532,6 +1532,14 @@ div.tocify {
 </ul>
 <p>Notes from <a href="https://www.gaia-gis.it/fossil/libspatialite/wiki?name=PROJ.6">Spatialite</a></p>
 <p>PROJ wiki <a href="https://github.com/OSGeo/PROJ/wiki/proj.h-adoption-status">proj.h adoption status</a></p>
+<p><strong>cartography</strong> <a href="https://github.com/riatelab/cartography/issues/54">CRS issues</a></p>
+<p><strong>geojsonio</strong> <a href="https://github.com/ropensci/geojsonio/issues/148">geojsonio seems vulnerable to PROJ 6</a></p>
+<p><strong>MODIS</strong> <a href="https://github.com/MatMatt/MODIS/issues/71">getTile() sp subset or raster::crop issues with PROJ 6.1 and GDAL 3.0</a></p>
+<p><strong>MODIStsp</strong> <a href="https://github.com/ropensci/MODIStsp/issues/167">PROJ 6 failures in MODIStsp</a></p>
+<p><strong>rangeMapper</strong> <a href="https://github.com/mpio-be/rangeMapper/issues/5">PROJ 6 failures in rangeMapper</a></p>
+<p><strong>rdefra</strong> <a href="https://github.com/ropensci/rdefra/issues/9">PROJ 6 failures in rdefra</a></p>
+<p><strong>rnrfa</strong> <a href="https://github.com/cvitolo/rnrfa/issues/15">PROJ 6 failures in rnfra</a></p>
+<p><strong>rshapemapper</strong> <a href="https://github.com/ateucher/rmapshaper/issues/88">PROJ 6 problems?</a></p>
 <ul>
 <li>Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes</li>
 </ul>
@@ -1546,6 +1554,9 @@ div.tocify {
 <p>Shapefile affected: <a href="https://github.com/r-spatial/sf/issues/1130">ESRI Shapefile driver not roundtripping in edge case</a></p>
 <p>Intersection affected: <a href="https://github.com/r-spatial/sf/issues/1121">GEOS 3.7.1 to 3.7.2 tightening of validity needed for operations</a></p>
 <p>Plotting in <strong>tmap</strong> affected: <a href="https://github.com/mtennekes/tmap/issues/333">tm_graticules() does not work for some cases</a></p>
+<p><strong>lidR</strong> <a href="https://github.com/Jean-Romain/lidR/issues/268">problem with class inheritance</a></p>
+<p><strong>MODIS</strong> <a href="https://github.com/MatMatt/MODIS/issues/71">getTile() sp subset or raster::crop issues with PROJ 6.1 and GDAL 3.0</a></p>
+<p><strong>inlmisc</strong> <a href="https://github.com/USGS-R/inlmisc/issues/106">Possible GEOS version vulnerability (3.7.2)</a></p>
 <ul>
 <li>Provide recommendations for checking/testing driver/GEOS versions in use and expected geometry handling outcomes</li>
 </ul>
