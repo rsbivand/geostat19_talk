@@ -25,6 +25,8 @@ When we publish the issues, how should we try to bring in users whose workflows 
 
 ## PROJ 6 CRS handling changes impact workflows using +datum= (and other fun)
 
+PUBLISHED AS https://github.com/r-spatial/discuss/issues/28 and https://github.com/r-spatial/sf/issues/1146 2019-09-11.
+
 [Ongoing changes](https://proj.org/development/migration.html) in the representation of coordinate reference systems in the [PROJ](https://proj.org), external software used by **sf**, **sp** and other R packages, will impact R packages and workflows using these packages. In particular, the changes affect transformation between coordinate reference systems, as for example shown in [this presentation](https://rsbivand.github.io/geostat19_talk/geostat_bivand_19.html) at the OpenGeoHub Summer School 2019.
 
 - Invite users/developers to contribute cases
@@ -69,6 +71,8 @@ https://cran.r-project.org/web/checks/check_results_vapour.html
 
 
 ## Vector geometry invalidity/frailty exposed as unrelated bugs fixed in GEOS and GDAL
+
+PUBLISHED AS https://github.com/r-spatial/discuss/issues/27 2019-09-11.
 
 Ongoing changes in vector geometry validity handling in GEOS and GDAL drivers used in R packages **sf**, **rgdal** and **rgeos** have led to unexpected changes or failures in R workflows and packages using these packages. Operations which previously appeared to succeed now fail, either noisily (good) or silently (bad).
 
