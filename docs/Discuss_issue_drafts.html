@@ -12,7 +12,7 @@
 
 <meta name="author" content="Roger Bivand" />
 
-<meta name="date" content="2019-09-03" />
+<meta name="date" content="2019-09-11" />
 
 <title>Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues</title>
 
@@ -1512,7 +1512,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Proposal for r-spatial/discuss repo PROJ and geometry invalidity issues</h1>
 <h4 class="author">Roger Bivand</h4>
-<h4 class="date">2019-09-03</h4>
+<h4 class="date">2019-09-11</h4>
 
 </div>
 
@@ -1523,8 +1523,8 @@ div.tocify {
 <p>This document is a place to draft the issue texts to bring in overviews of the two (more?) topics. Please provide PRs to this document until we feel that we are ready to publish the R-spatial/discuss issues.</p>
 <p>When we publish the issues, how should we try to bring in users whose workflows will be impacted by changes related to upstream software and made in R packages with many reverse dependencies? Please comment: R-sig-geo, twitter, other channels?</p>
 </div>
-<div id="proj-issue-draft-text" class="section level2">
-<h2>PROJ issue draft text</h2>
+<div id="proj-6-crs-handling-changes-impact-workflows-using-datum-and-other-fun" class="section level2">
+<h2>PROJ 6 CRS handling changes impact workflows using +datum= (and other fun)</h2>
 <p><a href="https://proj.org/development/migration.html">Ongoing changes</a> in the representation of coordinate reference systems in the <a href="https://proj.org">PROJ</a>, external software used by <strong>sf</strong>, <strong>sp</strong> and other R packages, will impact R packages and workflows using these packages. In particular, the changes affect transformation between coordinate reference systems, as for example shown in <a href="https://rsbivand.github.io/geostat19_talk/geostat_bivand_19.html">this presentation</a> at the OpenGeoHub Summer School 2019.</p>
 <ul>
 <li><p>Invite users/developers to contribute cases</p></li>
@@ -1541,12 +1541,14 @@ div.tocify {
 <p><strong>rdefra</strong> <a href="https://github.com/ropensci/rdefra/issues/9">PROJ 6 failures in rdefra</a></p>
 <p><strong>rnrfa</strong> <a href="https://github.com/cvitolo/rnrfa/issues/15">PROJ 6 failures in rnfra</a></p>
 <p><strong>rshapemapper</strong> <a href="https://github.com/ateucher/rmapshaper/issues/88">PROJ 6 problems?</a></p>
+<p>Incomplete list of packages with CRAN issues after PROJ 6.2.0 installed on some test machines:</p>
+<p><a href="https://cran.r-project.org/web/checks/check_results_foieGras.html" class="uri">https://cran.r-project.org/web/checks/check_results_foieGras.html</a> <a href="https://cran.r-project.org/web/checks/check_results_plotKML.html" class="uri">https://cran.r-project.org/web/checks/check_results_plotKML.html</a> <a href="https://cran.r-project.org/web/checks/check_results_rangeMapper.html" class="uri">https://cran.r-project.org/web/checks/check_results_rangeMapper.html</a> <a href="https://cran.r-project.org/web/checks/check_results_rnrfa.html" class="uri">https://cran.r-project.org/web/checks/check_results_rnrfa.html</a> <a href="https://cran.r-project.org/web/checks/check_results_sf.html" class="uri">https://cran.r-project.org/web/checks/check_results_sf.html</a> <a href="https://cran.r-project.org/web/checks/check_results_vapour.html" class="uri">https://cran.r-project.org/web/checks/check_results_vapour.html</a></p>
 <ul>
 <li>Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes</li>
 </ul>
 </div>
-<div id="geometry-invalidity-issue-draft-text" class="section level2">
-<h2>Geometry invalidity issue draft text</h2>
+<div id="vector-geometry-invalidityfrailty-exposed-as-unrelated-bugs-fixed-in-geos-and-gdal" class="section level2">
+<h2>Vector geometry invalidity/frailty exposed as unrelated bugs fixed in GEOS and GDAL</h2>
 <p>Ongoing changes in vector geometry validity handling in GEOS and GDAL drivers used in R packages <strong>sf</strong>, <strong>rgdal</strong> and <strong>rgeos</strong> have led to unexpected changes or failures in R workflows and packages using these packages. Operations which previously appeared to succeed now fail, either noisily (good) or silently (bad).</p>
 <ul>
 <li><p>Invite users/developers to contribute cases</p></li>

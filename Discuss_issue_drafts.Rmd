@@ -23,7 +23,7 @@ This document is a place to draft the issue texts to bring in overviews of the t
 When we publish the issues, how should we try to bring in users whose workflows will be impacted by changes related to upstream software and made in R packages with many reverse dependencies? Please comment: R-sig-geo, twitter, other channels?
 
 
-## PROJ issue draft text
+## PROJ 6 CRS handling changes impact workflows using +datum= (and other fun)
 
 [Ongoing changes](https://proj.org/development/migration.html) in the representation of coordinate reference systems in the [PROJ](https://proj.org), external software used by **sf**, **sp** and other R packages, will impact R packages and workflows using these packages. In particular, the changes affect transformation between coordinate reference systems, as for example shown in [this presentation](https://rsbivand.github.io/geostat19_talk/geostat_bivand_19.html) at the OpenGeoHub Summer School 2019.
 
@@ -53,10 +53,20 @@ PROJ wiki [proj.h adoption status](https://github.com/OSGeo/PROJ/wiki/proj.h-ado
 
 **rshapemapper** [PROJ 6 problems?](https://github.com/ateucher/rmapshaper/issues/88)
 
+Incomplete list of packages with CRAN issues after PROJ 6.2.0 installed on some test machines:
+
+https://cran.r-project.org/web/checks/check_results_foieGras.html
+https://cran.r-project.org/web/checks/check_results_plotKML.html
+https://cran.r-project.org/web/checks/check_results_rangeMapper.html
+https://cran.r-project.org/web/checks/check_results_rnrfa.html
+https://cran.r-project.org/web/checks/check_results_sf.html
+https://cran.r-project.org/web/checks/check_results_vapour.html
+
+
 - Provide recommendations for checking/testing PROJ versions in use and expected transformation outcomes
 
 
-## Geometry invalidity issue draft text
+## Vector geometry invalidity/frailty exposed as unrelated bugs fixed in GEOS and GDAL
 
 Ongoing changes in vector geometry validity handling in GEOS and GDAL drivers used in R packages **sf**, **rgdal** and **rgeos** have led to unexpected changes or failures in R workflows and packages using these packages. Operations which previously appeared to succeed now fail, either noisily (good) or silently (bad).
 
