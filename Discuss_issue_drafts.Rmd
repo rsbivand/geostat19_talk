@@ -35,6 +35,8 @@ Notes from [Spatialite](https://www.gaia-gis.it/fossil/libspatialite/wiki?name=P
 
 PROJ wiki [proj.h adoption status](https://github.com/OSGeo/PROJ/wiki/proj.h-adoption-status)
 
+[PostGIS blog posting](https://info.crunchydata.com/blog/waiting-for-postgis-3-st_transform-and-proj6)
+
 [GRASS-dev thread](https://lists.osgeo.org/pipermail/grass-dev/2019-September/093150.html) and [PR](https://github.com/OSGeo/grass/pull/118)
 
 **cartography** [CRS issues](https://github.com/riatelab/cartography/issues/54)
